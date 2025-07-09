@@ -1,0 +1,24 @@
+{
+  "name": "realtime-collab-canvas",
+  "version": "1.0.0",
+  "description": "Minimal collaborative drawing application that allows multiple users to draw on a shared digital canvas in real-time. Built with Node.js and the low-level ws library. This project focuses on synchronizing state across all connected clients.",
+  "homepage": "https://github.com/enriquezduane/realtime-collab-canvas#readme",
+  "bugs": {
+    "url": "https://github.com/enriquezduane/realtime-collab-canvas/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enriquezduane/realtime-collab-canvas.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node app/app.js --watch"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
