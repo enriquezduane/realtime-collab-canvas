@@ -1,0 +1,9 @@
+1.  **Project Initialization:** Set up a basic Node.js project. Install `Express` to serve the static front-end and `ws` for the WebSocket functionality.
+2.  **HTML Canvas Setup:** Create an `index.html` file containing an HTML `<canvas>` element. Link a `style.css` for basic styling and a `client.js` file for all frontend logic.
+3.  **WebSocket Server Creation:** In your main server file, create an Express server to serve the static files and attach a `ws` WebSocket server to it.
+4.  **Client Connection Management:** Implement the backend logic to maintain a set of all active client connections. Add clients when they connect and remove them when they disconnect.
+5.  **Client-Side Drawing Logic:** In `client.js`, add event listeners to the canvas for `mousedown`, `mousemove`, and `mouseup`. Write the functions to draw lines on the local canvas as the user moves their mouse while the button is pressed.
+6.  **Sending Data to Server:** When the user draws a line segment, package the coordinate data (e.g., `start_x`, `start_y`, `end_x`, `end_y`, `color`) into a JSON object and send it to the WebSocket server.
+7.  **Server-Side Broadcasting:** When the server receives a drawing data message from a client, iterate through your set of *all other* connected clients and forward that exact same JSON message to them.
+8.  **Receiving Data on Client:** In `client.js`, implement the `onmessage` event listener. When a message is received from the server, parse the JSON data and call your drawing function to render the line on the local canvas.
+9.  **(Optional Extension) Initial State Sync:** When a new user joins, their canvas is blank. Implement a feature where the server sends the current state of the canvas (a history of all drawing actions) to the new client so they see the complete picture immediately.
