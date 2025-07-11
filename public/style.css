@@ -1,3 +1,37 @@
-.myCanvas {
-    border: 5px solid #000000;
+.color-palette {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.color-swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+   transition: border-color 0.2s;
+}
+
+.color-swatch.active {
+    border-color: #333;
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+.clear-btn {
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.clear-btn:hover {
+    background-color: #cc3333;
 }

@@ -14,44 +14,45 @@ const wss = new WebSocketServer({ server });
 // Store all drawing actions
 const drawingHistory = [];
 
-wss.on('connection', function connection(ws) {
-    console.log('A new client connected!');
+ws.on('message', function incoming(message) {
+    const data = JSON.parse(message);
 
-    // Send drawing history to new client
-    if (drawingHistory.length > 0) {
-        ws.send(JSON.stringify({
-            type: 'history',
-            data: drawingHistory
-        }));
-    }
-
-    // Handle messages received from clients
-    ws.on('message', function incoming(message) {
-        const data = JSON.parse(message);
-
-        // Add to drawing history
-        drawingHistory.push(data);
-
-        // Broadcast to all other connected clients (not the sender)
+    if (data.type === 'clear') {
+        drawingHistory.length = 0; // Clear history first
+        // Broadcast clear to all clients including sender
         wss.clients.forEach(function each(client) {
-            if (client !== ws && client.readyState === client.OPEN) {
-                client.send(JSON.stringify({
-                    type: 'draw',
-                    data: data
-                }));
+            if (client.readyState === client.OPEN) {
+                client.send(JSON.stringify({ type: 'clear' }));
             }
         });
-    });
+    } else if (data.type === 'draw') {
+        // Store the draw data consistently
+        drawingHistory.push({
+            lastX: data.lastX,
+            lastY: data.lastY,
+            currentX: data.currentX,
+            currentY: data.currentY,
+            color: data.color
+        });
 
-    // Handle client disconnections
-    ws.on('close', () => {
-        console.log('Client disconnected');
-    });
+        // Broadcast to other clients
+        wss.clients.forEach(function each(client) {
+            if (client !== ws && client.readyState === client.OPEN) {
+                client.send(JSON.stringify(data));
+            }
+        });
+    }
+});  // Handle client disconnections
 
-    // Handle errors
-    ws.on('error', (error) => {
-        console.error('WebSocket error:', error);
-    });
+ws.on('close', () => {
+    console.log('Client disconnected');
+});
+
+// Handle errors
+ws.on('error', (error) => {
+    console.error('WebSocket error:', error);
+});
 });
 
 console.log('WebSocket server is ready and attached to the HTTP server.');
+
