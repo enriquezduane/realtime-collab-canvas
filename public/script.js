@@ -1,5 +1,6 @@
 const c = document.querySelector(".myCanvas");
-const ws = new WebSocket('ws://localhost:3000');
+// Use the current host instead of hardcoded localhost for network compatibility
+const ws = new WebSocket(`ws://${window.location.host}`);
 const ctx = c.getContext("2d");
 ctx.strokeStyle = "#000000"; // Black color
 ctx.lineWidth = 2;

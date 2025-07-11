@@ -1,12 +1,37 @@
 const express = require('express')
 const { WebSocketServer } = require('ws');
+const os = require('os');
 const app = express()
 const port = 3000
 
 app.use(express.static('public'))
 
-const server = app.listen(port, () => {
+// Listen on all network interfaces (0.0.0.0) to allow external connections
+const server = app.listen(port, '0.0.0.0', () => {
     console.log(`Application is listening on port ${port}`)
+    console.log(`Local access: http://localhost:${port}`)
+    
+    // Get and display network IP addresses
+    const networkInterfaces = os.networkInterfaces();
+    const addresses = [];
+    
+    for (const interfaceName in networkInterfaces) {
+        const nets = networkInterfaces[interfaceName];
+        for (const net of nets) {
+            // Skip over non-IPv4 and internal addresses
+            if (net.family === 'IPv4' && !net.internal) {
+                addresses.push(net.address);
+            }
+        }
+    }
+    
+    if (addresses.length > 0) {
+        console.log('\n📱 Network access - share these URLs with other devices:');
+        addresses.forEach(address => {
+            console.log(`   http://${address}:${port}`);
+        });
+        console.log('');
+    }
 })
 
 const wss = new WebSocketServer({ server });
@@ -65,4 +90,3 @@ wss.on('connection', function connection(ws) {
 });
 
 console.log('WebSocket server is ready and attached to the HTTP server.');
-
