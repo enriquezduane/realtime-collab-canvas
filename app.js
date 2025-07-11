@@ -17,12 +17,16 @@ wss.on('connection', function connection(ws) {
 
     // Handle messages received from clients
     ws.on('message', function incoming(message) {
-        console.log('received from client: %s', message);
+        const data = JSON.parse(message);
+        console.log('Received data:', data);
 
-        // Example: Echo the message back to the client
-        // ws.send(`Server received: ${message}`);
+        // Broadcast to all other connected clients (not the sender)
+        wss.clients.forEach(function each(client) {
+            if (client !== ws && client.readyState === client.OPEN) {
+                client.send(JSON.stringify(data));
+            }
+        });
     });
-
     // Handle client disconnections
     ws.on('close', () => {
         console.log('Client disconnected');
@@ -32,9 +36,6 @@ wss.on('connection', function connection(ws) {
     ws.on('error', (error) => {
         console.error('WebSocket error:', error);
     });
-
-    // Send a welcome message to the newly connected client
-    ws.send('Welcome to the WebSocket server!');
 });
 
 console.log('WebSocket server is ready and attached to the HTTP server.');
