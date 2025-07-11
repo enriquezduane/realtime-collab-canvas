@@ -1,7 +1,6 @@
 const express = require('express')
 const { WebSocketServer } = require('ws');
 const app = express()
-
 const port = 3000
 
 app.use(express.static('public'))
@@ -12,21 +11,38 @@ const server = app.listen(port, () => {
 
 const wss = new WebSocketServer({ server });
 
+// Store all drawing actions
+const drawingHistory = [];
+
 wss.on('connection', function connection(ws) {
     console.log('A new client connected!');
+
+    // Send drawing history to new client
+    if (drawingHistory.length > 0) {
+        ws.send(JSON.stringify({
+            type: 'history',
+            data: drawingHistory
+        }));
+    }
 
     // Handle messages received from clients
     ws.on('message', function incoming(message) {
         const data = JSON.parse(message);
-        console.log('Received data:', data);
+
+        // Add to drawing history
+        drawingHistory.push(data);
 
         // Broadcast to all other connected clients (not the sender)
         wss.clients.forEach(function each(client) {
             if (client !== ws && client.readyState === client.OPEN) {
-                client.send(JSON.stringify(data));
+                client.send(JSON.stringify({
+                    type: 'draw',
+                    data: data
+                }));
             }
         });
     });
+
     // Handle client disconnections
     ws.on('close', () => {
         console.log('Client disconnected');
