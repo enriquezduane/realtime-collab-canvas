@@ -1,4 +1,11 @@
-var c = document.querySelector(".myCanvas");
+const c = document.querySelector(".myCanvas");
+
+const ws = new WebSocket('ws://localhost:3000');
+
+ws.addEventListener('open', () => {
+    console.log('Client connected to WebSocket server.');
+    ws.send('Hello from browser client!');
+});
 
 if (c) {
     const ctx = c.getContext("2d");

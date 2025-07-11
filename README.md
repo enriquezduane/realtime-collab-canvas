@@ -3,4 +3,6 @@ Minimal collaborative drawing application that allows multiple users to draw on 
 
 drawing in html is easy. setup a canvas and setup event listeners to draw  to positions
 
+client makes a websocket object and connects the websocket server that is in the backend
+
 
